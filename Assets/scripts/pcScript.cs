@@ -12,6 +12,21 @@ public class pcScript : MonoBehaviour {
 	public float constMoveSpeed;
 	public float moveSpeed;
 	public float jumpSpeed;
+	public float jumpDecrease;
+
+	// Variables to store ints for spell types
+	public int spell1 = 1;
+	public int spell2 = 2;
+	public int spell3 = 3;
+
+	// Array to hold the spell types
+	public int[] spells;
+
+	// Variable for length of array for spells
+	public int lengthOfArray = 6;
+
+	// Variable for the current index # the spells array is at
+	public int index = 0;
 
 	// Variable to store how high the player can jump
 	public float jumpHeight;
@@ -39,13 +54,111 @@ public class pcScript : MonoBehaviour {
 		// This is useful when you want to set something to something else, because you cant do that outside
 		// of the script. Note that this function overrides the value that is set outside of the script in the
 		// editor's inspector tab. This means make sure that this value is set right here, or it can mess it up
+
+		spells = new int[lengthOfArray];
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
+		if (Input.GetKeyDown(KeyCode.Q))
+		{
+			if (index > 4)
+			{
+				for (int i = 0; i < spells.Length; i++)
+				{
+					spells[i] = 0;
+				}
+				
+				index = 0;
+				
+				spells[index] = spell1;
+				
+				Debug.Log("Full Q Pressed: #" + index);
+				
+				index++;
+			}
+
+			else {
+
+				spells[index] = spell1;
+				
+				Debug.Log("Q Pressed: #" + index);
+				
+				index++;
+			}
+		}
+
+		if (Input.GetKeyDown(KeyCode.W))
+		{
+			if (index > 4)
+			{
+				for (int i = 0; i < spells.Length; i++)
+				{
+					spells[i] = 0;
+				}
+				
+				index = 0;
+				
+				spells[index] = spell1;
+				
+				Debug.Log("Full W Pressed: #" + index);
+				
+				index++;
+			}
+			
+			else {
+				
+				spells[index] = spell1;
+				
+				Debug.Log("W Pressed: #" + index);
+				
+				index++;
+			}
+		}
+
+		if (Input.GetKeyDown(KeyCode.E))
+		{
+			if (index > 4)
+			{
+				for (int i = 0; i < spells.Length; i++)
+				{
+					spells[i] = 0;
+				}
+				
+				index = 0;
+
+				spells[index] = spell1;
+				
+				Debug.Log("Full E Pressed: #" + index);
+
+				index++;
+			}
+			
+			else {
+				
+				spells[index] = spell1;
+				
+				Debug.Log("E Pressed: #" + index);
+				
+				index++;
+			}
+		}
+
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			for (int i = 0; i < spells.Length; i++)
+			{
+				spells[i] = 0;
+			}
+
+			index = 0;
+
+			Debug.Log("R Pressed: #" + index);
+		}
+
 		// If the left arrow key is currently down
-		if (Input.GetKey(KeyCode.LeftArrow))
+		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
 		{
 			// In C# you have to set a temporary variable in order to change a gameobject's variables
 			// In this case we need to make a temp variable for a position, which is Vector2 type
@@ -61,7 +174,7 @@ public class pcScript : MonoBehaviour {
 		}
 	
 		// Same stuff as above only this time it is for the right arrow key to move the object right
-		if (Input.GetKey(KeyCode.RightArrow))
+		if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
 		{
 			Vector2 position = new Vector2(this.transform.position.x, this.transform.position.y);
 
@@ -87,7 +200,7 @@ public class pcScript : MonoBehaviour {
 			timer += Time.deltaTime;
 
 			// Set the player's move speed to 1/4 of the usual speed because the player is in the air
-			moveSpeed = constMoveSpeed / 4;
+			moveSpeed = constMoveSpeed / jumpDecrease;
 
 			// Create a temporary variable just like in the code above in order to change the position
 			Vector2 positionJ = new Vector2(this.transform.position.x, this.transform.position.y);
