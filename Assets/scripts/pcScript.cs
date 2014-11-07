@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class pcScript : MonoBehaviour {
 
@@ -22,6 +23,9 @@ public class pcScript : MonoBehaviour {
 	// Array to hold the spell types
 	public int[] spells;
 
+	//Array to hold castable spells
+	public int[] fireball = {1, 1, 1};
+
 	// Variable for length of array for spells
 	public int lengthOfArray = 6;
 
@@ -40,6 +44,8 @@ public class pcScript : MonoBehaviour {
 	// Variables to tell what state the player is currently in
 	public bool isJumping = false;
 	public bool isFalling = false;
+
+	public bool castSpell;
 
 	void Awake ()
 	{
@@ -83,7 +89,7 @@ public class pcScript : MonoBehaviour {
 
 				spells[index] = spell1;
 				
-				Debug.Log("Q Pressed: #" + index);
+				Debug.Log("Q Pressed: #" + index + " Value passed: " + spells[index]);
 				
 				index++;
 			}
@@ -100,7 +106,7 @@ public class pcScript : MonoBehaviour {
 				
 				index = 0;
 				
-				spells[index] = spell1;
+				spells[index] = spell2;
 				
 				Debug.Log("Full W Pressed: #" + index);
 				
@@ -109,7 +115,7 @@ public class pcScript : MonoBehaviour {
 			
 			else {
 				
-				spells[index] = spell1;
+				spells[index] = spell2;
 				
 				Debug.Log("W Pressed: #" + index);
 				
@@ -128,7 +134,7 @@ public class pcScript : MonoBehaviour {
 				
 				index = 0;
 
-				spells[index] = spell1;
+				spells[index] = spell3;
 				
 				Debug.Log("Full E Pressed: #" + index);
 
@@ -137,7 +143,7 @@ public class pcScript : MonoBehaviour {
 			
 			else {
 				
-				spells[index] = spell1;
+				spells[index] = spell3;
 				
 				Debug.Log("E Pressed: #" + index);
 				
@@ -147,6 +153,24 @@ public class pcScript : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.R))
 		{
+			if(index == fireball.Length )
+			{
+				for (int i  = 0; i <fireball.Length; i++)
+				{
+					if (fireball[i] == spells[i])
+						castSpell = true;
+					else
+					{
+						castSpell = false;
+						break;
+					}
+				}		
+				if (castSpell)
+					Debug.Log("Correct Spell");
+				else
+					Debug.Log("Incorrect Spell");
+			}
+
 			for (int i = 0; i < spells.Length; i++)
 			{
 				spells[i] = 0;
@@ -154,7 +178,7 @@ public class pcScript : MonoBehaviour {
 
 			index = 0;
 
-			Debug.Log("R Pressed: #" + index);
+			//Debug.Log("R Pressed: #" + index);
 		}
 
 		// If the left arrow key is currently down

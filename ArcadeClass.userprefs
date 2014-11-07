@@ -1,9 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/pcScript.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\pcScript.cs">
     <Files>
-      <File FileName="Assets/scripts/pcScript.cs" Line="203" Column="45" />
-      <File FileName="Assets/scripts/cameraFollow.cs" Line="17" Column="36" />
+      <File FileName="Assets\scripts\pcScript.cs" Line="168" Column="19" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
