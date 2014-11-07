@@ -20,14 +20,28 @@ public class pcScript : MonoBehaviour {
 	public int spell2 = 2;
 	public int spell3 = 3;
 
+	public int health;
+
 	// Array to hold the spell types
-	public int[] spells;
+	private int[] spells;
+
+	// Spells
+	private int[] fireball = {1, 1, 1};
+	private int[] flares = {1, 2, 1, 2};
+	private int[] sunbeam = {1, 1, 3, 3, 1};
+	private int[] piercingBlade = {2, 1, 1, 3};
+	private int[] guillotine = {2, 2, 3, 1, 3};
+	private int[] whirlingBlade = {2, 3, 1, 2, 2};
+	private int[] drainCube = {3, 3, 2, 1, 3};
+	private int[] necroglassWall = {3, 2, 2, 3, 3};
+	private int[] darkGrasp = {3, 1, 2, 3, 2};
 
 	//Array to hold castable spells
 	public int[] fireball = {1, 1, 1};
 
 	// Variable for length of array for spells
 	public int lengthOfArray = 6;
+	public int maxSpells = 5;
 
 	// Variable for the current index # the spells array is at
 	public int index = 0;
@@ -45,7 +59,11 @@ public class pcScript : MonoBehaviour {
 	public bool isJumping = false;
 	public bool isFalling = false;
 
+<<<<<<< HEAD
+	public bool castSpell = false;
+=======
 	public bool castSpell;
+>>>>>>> FETCH_HEAD
 
 	void Awake ()
 	{
@@ -89,7 +107,11 @@ public class pcScript : MonoBehaviour {
 
 				spells[index] = spell1;
 				
+<<<<<<< HEAD
+				Debug.Log("Q Pressed: #" + index + " " + spells[index]);
+=======
 				Debug.Log("Q Pressed: #" + index + " Value passed: " + spells[index]);
+>>>>>>> FETCH_HEAD
 				
 				index++;
 			}
@@ -153,6 +175,9 @@ public class pcScript : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.R))
 		{
+<<<<<<< HEAD
+			checkSpell();
+=======
 			if(index == fireball.Length )
 			{
 				for (int i  = 0; i <fireball.Length; i++)
@@ -170,14 +195,19 @@ public class pcScript : MonoBehaviour {
 				else
 					Debug.Log("Incorrect Spell");
 			}
+>>>>>>> FETCH_HEAD
 
 			for (int i = 0; i < spells.Length; i++)
 			{
 				spells[i] = 0;
 			}
-
+			
 			index = 0;
+<<<<<<< HEAD
+			
+=======
 
+>>>>>>> FETCH_HEAD
 			//Debug.Log("R Pressed: #" + index);
 		}
 
@@ -289,6 +319,171 @@ public class pcScript : MonoBehaviour {
 
 			// Set the player's position to the temp variable in order to move the object down in the game
 			this.transform.position = positionG;
+		}
+	}
+
+	void checkSpell ()
+	{
+		if (index == fireball.Length)
+		{
+			for (int i = 0; i <fireball.Length; i++)
+			{
+				if (fireball[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
+		}
+
+		if(index == flares.Length)
+		{
+			for (int i = 0; i <flares.Length; i++)
+			{
+				if (flares[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
+		}
+
+		if(index == sunbeam.Length)
+		{
+			for (int i = 0; i <sunbeam.Length; i++)
+			{
+				if (sunbeam[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
+		}
+
+		if(index == piercingBlade.Length)
+		{
+			for (int i = 0; i <piercingBlade.Length; i++)
+			{
+				if (piercingBlade[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
+		}
+
+		if(index == guillotine.Length)
+		{
+			for (int i = 0; i <guillotine.Length; i++)
+			{
+				if (guillotine[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
+		}
+
+		if(index == whirlingBlade.Length)
+		{
+			for (int i = 0; i <whirlingBlade.Length; i++)
+			{
+				if (whirlingBlade[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
+		}
+
+		if(index == drainCube.Length)
+		{
+			for (int i = 0; i <drainCube.Length; i++)
+			{
+				if (drainCube[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
+		}
+
+		if(index == necroglassWall.Length)
+		{
+			for (int i = 0; i <necroglassWall.Length; i++)
+			{
+				if (necroglassWall[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
+		}
+
+		if(index == darkGrasp.Length)
+		{
+			for (int i = 0; i <darkGrasp.Length; i++)
+			{
+				if (darkGrasp[i] == spells[i])
+					castSpell = true;
+				else
+				{
+					castSpell = false;
+					break;
+				}
+			}		
+			if (castSpell)
+				Debug.Log("Correct Spell");
+			else
+				Debug.Log("Incorrect Spell");
 		}
 	}
 

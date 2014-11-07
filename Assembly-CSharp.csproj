@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\scripts\cameraFollow.cs" />
+     <Compile Include="Assets\scripts\enemySpawner.cs" />
      <Compile Include="Assets\scripts\pcScript.cs" />
      <Compile Include="Assets\scripts\playerScript.cs" />
      <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
