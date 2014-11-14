@@ -4,6 +4,8 @@ using System.Linq;
 
 public class pcScript : MonoBehaviour {
 
+	public AudioClip deathSound;
+
 	// Variables to keep track of time
 	public float timer;
 	public float time;
@@ -56,13 +58,15 @@ public class pcScript : MonoBehaviour {
 	public bool isJumping = false;
 	public bool isFalling = false;
 
-
 	public bool castSpell = false;
+
+	private soundScript sound;
 
 	void Awake ()
 	{
 		// This function is mainly used in order to set variables from different gameobject's scripts
 		// We do not currently need this, but we might need it later so I put it in as a placeholder
+		sound = this.gameObject.GetComponentInChildren<soundScript>();
 	}
 
 	// Use this for initialization
@@ -73,12 +77,21 @@ public class pcScript : MonoBehaviour {
 		// of the script. Note that this function overrides the value that is set outside of the script in the
 		// editor's inspector tab. This means make sure that this value is set right here, or it can mess it up
 
+		deathSound = sound.deathSound;
+
 		spells = new int[lengthOfArray];
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
+		if (health <= 0)
+		{
+			sound.audio.PlayOneShot(deathSound);
+
+			health = 3;
+		}
+
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
 			if (index > 4)
@@ -101,7 +114,7 @@ public class pcScript : MonoBehaviour {
 
 				spells[index] = spell1;
 				Debug.Log("Q Pressed: #" + index + " " + spells[index]);
-				Debug.Log("Q Pressed: #" + index + " Value passed: " + spells[index]);
+
 				index++;
 			}
 		}
@@ -164,26 +177,7 @@ public class pcScript : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.R))
 		{
-
 			checkSpell();
-			if(index == fireball.Length )
-			{
-				for (int i  = 0; i <fireball.Length; i++)
-				{
-					if (fireball[i] == spells[i])
-						castSpell = true;
-					else
-					{
-						castSpell = false;
-						break;
-					}
-				}		
-				if (castSpell)
-					Debug.Log("Correct Spell");
-				else
-					Debug.Log("Incorrect Spell");
-			}
-
 
 			for (int i = 0; i < spells.Length; i++)
 			{
@@ -191,7 +185,6 @@ public class pcScript : MonoBehaviour {
 			}
 			
 			index = 0;
-			//Debug.Log("R Pressed: #" + index);
 		}
 
 		// If the left arrow key is currently down
@@ -325,7 +318,7 @@ public class pcScript : MonoBehaviour {
 				Debug.Log("Incorrect Spell");
 		}
 
-		if(index == flares.Length)
+		if (index == flares.Length)
 		{
 			for (int i = 0; i <flares.Length; i++)
 			{
@@ -343,7 +336,7 @@ public class pcScript : MonoBehaviour {
 				Debug.Log("Incorrect Spell");
 		}
 
-		if(index == sunbeam.Length)
+		if (index == sunbeam.Length)
 		{
 			for (int i = 0; i <sunbeam.Length; i++)
 			{
@@ -361,7 +354,7 @@ public class pcScript : MonoBehaviour {
 				Debug.Log("Incorrect Spell");
 		}
 
-		if(index == piercingBlade.Length)
+		if (index == piercingBlade.Length)
 		{
 			for (int i = 0; i <piercingBlade.Length; i++)
 			{
@@ -379,7 +372,7 @@ public class pcScript : MonoBehaviour {
 				Debug.Log("Incorrect Spell");
 		}
 
-		if(index == guillotine.Length)
+		if (index == guillotine.Length)
 		{
 			for (int i = 0; i <guillotine.Length; i++)
 			{
@@ -397,7 +390,7 @@ public class pcScript : MonoBehaviour {
 				Debug.Log("Incorrect Spell");
 		}
 
-		if(index == whirlingBlade.Length)
+		if (index == whirlingBlade.Length)
 		{
 			for (int i = 0; i <whirlingBlade.Length; i++)
 			{
@@ -415,7 +408,7 @@ public class pcScript : MonoBehaviour {
 				Debug.Log("Incorrect Spell");
 		}
 
-		if(index == drainCube.Length)
+		if (index == drainCube.Length)
 		{
 			for (int i = 0; i <drainCube.Length; i++)
 			{
@@ -433,7 +426,7 @@ public class pcScript : MonoBehaviour {
 				Debug.Log("Incorrect Spell");
 		}
 
-		if(index == necroglassWall.Length)
+		if (index == necroglassWall.Length)
 		{
 			for (int i = 0; i <necroglassWall.Length; i++)
 			{
@@ -451,7 +444,7 @@ public class pcScript : MonoBehaviour {
 				Debug.Log("Incorrect Spell");
 		}
 
-		if(index == darkGrasp.Length)
+		if (index == darkGrasp.Length)
 		{
 			for (int i = 0; i <darkGrasp.Length; i++)
 			{

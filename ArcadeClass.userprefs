@@ -1,9 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\pcScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/pcScript.cs">
     <Files>
-      <File FileName="Assets\scripts\pcScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\enemySpawner.cs" Line="11" Column="27" />
+      <File FileName="Assets/scripts/pcScript.cs" Line="93" Column="4" />
+      <File FileName="Assets/scripts/enemySpawner.cs" Line="22" Column="22" />
+      <File FileName="Assets/scripts/manaScript.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/enemy1Script.cs" Line="48" Column="22" />
+      <File FileName="Assets/scripts/projectile1Script.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/soundScript.cs" Line="21" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

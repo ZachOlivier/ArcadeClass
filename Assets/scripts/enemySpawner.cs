@@ -5,10 +5,14 @@ public class enemySpawner : MonoBehaviour {
 
 	public float timer;
 	public float spawnTime;
+
 	public int minSpawnTime;
 	public int maxSpawnTimer;
+
 	public int enemiesSpawned;
+
 	public Vector3 spawnPoint;
+
 	public GameObject enemy;
 
 	// Use this for initialization
