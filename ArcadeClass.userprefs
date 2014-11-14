@@ -1,14 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\pcScript.cs">
     <Files>
-<<<<<<< HEAD
-      <File FileName="Assets/scripts/pcScript.cs" Line="422" Column="23" />
-      <File FileName="Assets/scripts/cameraFollow.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/enemySpawner.cs" Line="1" Column="1" />
-=======
-      <File FileName="Assets\scripts\pcScript.cs" Line="168" Column="19" />
->>>>>>> FETCH_HEAD
+      <File FileName="Assets\scripts\pcScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\enemySpawner.cs" Line="11" Column="27" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

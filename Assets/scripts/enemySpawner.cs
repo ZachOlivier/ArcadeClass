@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class enemySpawner : MonoBehaviour {
@@ -7,8 +7,9 @@ public class enemySpawner : MonoBehaviour {
 	public float spawnTime;
 	public int minSpawnTime;
 	public int maxSpawnTimer;
-
 	public int enemiesSpawned;
+	public Vector3 spawnPoint;
+	public GameObject enemy;
 
 	// Use this for initialization
 	void Start () {
@@ -23,9 +24,9 @@ public class enemySpawner : MonoBehaviour {
 	
 		timer += Time.deltaTime;
 
-		if (timer >= spawnTime)
+		if (timer >= spawnTime && enemiesSpawned < 6)
 		{
-			//Debug.Log("Enemy Spawned " + enemiesSpawned);
+			Instantiate (enemy, spawnPoint, Quaternion.identity);
 
 			enemiesSpawned++;
 

@@ -25,7 +25,7 @@ public class pcScript : MonoBehaviour {
 	// Array to hold the spell types
 	private int[] spells;
 
-	// Spells
+	// Castable Spells
 	private int[] fireball = {1, 1, 1};
 	private int[] flares = {1, 2, 1, 2};
 	private int[] sunbeam = {1, 1, 3, 3, 1};
@@ -35,9 +35,6 @@ public class pcScript : MonoBehaviour {
 	private int[] drainCube = {3, 3, 2, 1, 3};
 	private int[] necroglassWall = {3, 2, 2, 3, 3};
 	private int[] darkGrasp = {3, 1, 2, 3, 2};
-
-	//Array to hold castable spells
-	public int[] fireball = {1, 1, 1};
 
 	// Variable for length of array for spells
 	public int lengthOfArray = 6;
@@ -59,11 +56,8 @@ public class pcScript : MonoBehaviour {
 	public bool isJumping = false;
 	public bool isFalling = false;
 
-<<<<<<< HEAD
+
 	public bool castSpell = false;
-=======
-	public bool castSpell;
->>>>>>> FETCH_HEAD
 
 	void Awake ()
 	{
@@ -106,13 +100,8 @@ public class pcScript : MonoBehaviour {
 			else {
 
 				spells[index] = spell1;
-				
-<<<<<<< HEAD
 				Debug.Log("Q Pressed: #" + index + " " + spells[index]);
-=======
 				Debug.Log("Q Pressed: #" + index + " Value passed: " + spells[index]);
->>>>>>> FETCH_HEAD
-				
 				index++;
 			}
 		}
@@ -175,9 +164,8 @@ public class pcScript : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.R))
 		{
-<<<<<<< HEAD
+
 			checkSpell();
-=======
 			if(index == fireball.Length )
 			{
 				for (int i  = 0; i <fireball.Length; i++)
@@ -195,7 +183,7 @@ public class pcScript : MonoBehaviour {
 				else
 					Debug.Log("Incorrect Spell");
 			}
->>>>>>> FETCH_HEAD
+
 
 			for (int i = 0; i < spells.Length; i++)
 			{
@@ -203,11 +191,6 @@ public class pcScript : MonoBehaviour {
 			}
 			
 			index = 0;
-<<<<<<< HEAD
-			
-=======
-
->>>>>>> FETCH_HEAD
 			//Debug.Log("R Pressed: #" + index);
 		}
 
