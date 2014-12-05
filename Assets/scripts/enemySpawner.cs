@@ -14,12 +14,13 @@ public class enemySpawner : MonoBehaviour {
 	public Vector3 spawnPoint;
 
 	public GameObject enemy;
+	public GameObject jumpingEnemy;
 
 	// Use this for initialization
 	void Start () {
 	
 		timer = 0;
-		enemiesSpawned = 1;
+		enemiesSpawned = 0;
 		spawnTime = Random.Range(minSpawnTime, maxSpawnTimer);
 	}
 	
@@ -28,12 +29,18 @@ public class enemySpawner : MonoBehaviour {
 	
 		timer += Time.deltaTime;
 
-		if (timer >= spawnTime && enemiesSpawned < 6)
+		if (timer >= spawnTime && enemiesSpawned % 2 == 0)
 		{
 			Instantiate (enemy, spawnPoint, Quaternion.identity);
 
 			enemiesSpawned++;
 
+			timer = 0;
+		}
+		else if (timer >= spawnTime)
+		{
+			Instantiate (jumpingEnemy, spawnPoint, Quaternion.identity);
+			enemiesSpawned++;
 			timer = 0;
 		}
 	}
