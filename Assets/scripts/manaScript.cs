@@ -3,43 +3,51 @@ using System.Collections;
 
 public class manaScript : MonoBehaviour {
 
-	public int manaStore;
+	public int manaStored;
+	public int maxMana;
+
+	public int manaReturned;
+
 	public float manaTime;
+	public float manaCD;
 
 	// Use this for initialization
 	void Start () {
 	
+		manaStored = maxMana;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-		if (manaStore < 5)
+		if (manaStored < maxMana)
 		{
 			manaTime += Time.deltaTime;
 
-			if (manaTime >= 1)
+			if (manaTime >= manaCD)
 			{
-				if (manaStore == 4)
+				if (manaStored == (maxMana - 1))
 				{
-					manaStore += 1;
+					manaStored++;
 				}
 
 				else
 				{
-					manaStore += 2;
+					manaStored += manaReturned;
 				}
 
 				manaTime = 0;
 			}
 		}
 
-		else
+		if (manaStored < 0)
 		{
-			if (manaTime != 0)
-			{
-				manaTime = 0;
-			}
+			manaStored = 0;
+		}
+
+		if (manaStored > maxMana)
+		{
+			manaStored = maxMana;
 		}
 	}
 }

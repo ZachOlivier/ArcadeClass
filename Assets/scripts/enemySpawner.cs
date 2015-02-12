@@ -22,6 +22,7 @@ public class enemySpawner : MonoBehaviour {
 		timer = 0;
 		enemiesSpawned = 0;
 		spawnTime = Random.Range(minSpawnTime, maxSpawnTimer);
+		spawnPoint = transform.position;
 	}
 	
 	// Update is called once per frame

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 public class pcScript : MonoBehaviour {
@@ -25,18 +26,18 @@ public class pcScript : MonoBehaviour {
 	public int health;
 
 	// Array to hold the spell types
-	private int[] spells;
+	private List<int> spells = new List<int>();
 
 	// Castable Spells
-	private int[] fireball = {1, 1, 1};
-	private int[] flares = {1, 2, 1, 2};
-	private int[] sunbeam = {1, 1, 3, 3, 1};
-	private int[] piercingBlade = {2, 1, 1, 3};
-	private int[] guillotine = {2, 2, 3, 1, 3};
-	private int[] whirlingBlade = {2, 3, 1, 2, 2};
-	private int[] drainCube = {3, 3, 2, 1, 3};
-	private int[] necroglassWall = {3, 2, 2, 3, 3};
-	private int[] darkGrasp = {3, 1, 2, 3, 2};
+	private int[] fireball			= {1, 1, 1};
+	private int[] flares			= {1, 2, 1, 2};
+	private int[] sunbeam			= {1, 1, 3, 3, 1};
+	private int[] piercingBlade 	= {2, 1, 1, 3};
+	private int[] guillotine		= {2, 2, 3, 1, 3};
+	private int[] whirlingBlade 	= {2, 3, 1, 2, 2};
+	private int[] drainCube			= {3, 3, 2, 1, 3};
+	private int[] necroglassWall	= {3, 2, 2, 3, 3};
+	private int[] darkGrasp			= {3, 1, 2, 3, 2};
 
 	// Variable for length of array for spells
 	public int lengthOfArray = 6;
@@ -61,12 +62,14 @@ public class pcScript : MonoBehaviour {
 	public bool castSpell = false;
 
 	private soundScript sound;
+	private manaScript mana;
 
 	void Awake ()
 	{
 		// This function is mainly used in order to set variables from different gameobject's scripts
 		// We do not currently need this, but we might need it later so I put it in as a placeholder
 		sound = this.gameObject.GetComponentInChildren<soundScript>();
+		mana = this.gameObject.GetComponent<manaScript>();
 	}
 
 	// Use this for initialization
@@ -79,7 +82,7 @@ public class pcScript : MonoBehaviour {
 
 		deathSound = sound.deathSound;
 
-		spells = new int[lengthOfArray];
+		//spells = new int[lengthOfArray];
 	}
 	
 	// Update is called once per frame
@@ -92,94 +95,114 @@ public class pcScript : MonoBehaviour {
 			health = 3;
 		}
 
-		if (Input.GetKeyDown(KeyCode.Q))
+		if (mana.manaStored > 0)
 		{
-			if (index > 4)
+			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				for (int i = 0; i < spells.Length; i++)
+				if (spells.Count > 5)
 				{
-					spells[i] = 0;
+					for (int i = 0; i < spells.Count; i++)
+					{
+						spells[i] = 0;
+					}
+					
+					index = 0;
+					
+					mana.manaStored--;
+					
+					spells[index] = spell1;
+					
+					Debug.Log("Full Q Pressed: #" + index);
+					
+					index++;
 				}
 				
-				index = 0;
-				
-				spells[index] = spell1;
-				
-				Debug.Log("Full Q Pressed: #" + index);
-				
-				index++;
+				else
+				{	
+					mana.manaStored--;
+
+					spells[index] = spell1;
+					Debug.Log("Q Pressed: #" + index + " " + spells[index]);
+					
+					index++;
+				}
 			}
-
-			else {
-
-				spells[index] = spell1;
-				Debug.Log("Q Pressed: #" + index + " " + spells[index]);
-
-				index++;
+			
+			if (Input.GetKeyDown(KeyCode.W))
+			{
+				if (index > 4)
+				{
+					for (int i = 0; i < spells.Count; i++)
+					{
+						spells[i] = 0;
+					}
+					
+					index = 0;
+					
+					mana.manaStored--;
+					
+					spells[index] = spell2;
+					
+					Debug.Log("Full W Pressed: #" + index);
+					
+					index++;
+				}
+				
+				else
+				{	
+					mana.manaStored--;
+					
+					spells[index] = spell2;
+					
+					Debug.Log("W Pressed: #" + index);
+					
+					index++;
+				}
+			}
+			
+			if (Input.GetKeyDown(KeyCode.E))
+			{
+				if (index > 4)
+				{
+					for (int i = 0; i < spells.Count; i++)
+					{
+						spells[i] = 0;
+					}
+					
+					index = 0;
+					
+					mana.manaStored--;
+					
+					spells[index] = spell3;
+					
+					Debug.Log("Full E Pressed: #" + index);
+					
+					index++;
+				}
+				
+				else 
+				{	
+					mana.manaStored--;
+					
+					spells[index] = spell3;
+					
+					Debug.Log("E Pressed: #" + index);
+					
+					index++;
+				}
 			}
 		}
 
-		if (Input.GetKeyDown(KeyCode.W))
+		else if (mana.manaStored <= 0)
 		{
-			if (index > 4)
-			{
-				for (int i = 0; i < spells.Length; i++)
-				{
-					spells[i] = 0;
-				}
-				
-				index = 0;
-				
-				spells[index] = spell2;
-				
-				Debug.Log("Full W Pressed: #" + index);
-				
-				index++;
-			}
-			
-			else {
-				
-				spells[index] = spell2;
-				
-				Debug.Log("W Pressed: #" + index);
-				
-				index++;
-			}
-		}
-
-		if (Input.GetKeyDown(KeyCode.E))
-		{
-			if (index > 4)
-			{
-				for (int i = 0; i < spells.Length; i++)
-				{
-					spells[i] = 0;
-				}
-				
-				index = 0;
-
-				spells[index] = spell3;
-				
-				Debug.Log("Full E Pressed: #" + index);
-
-				index++;
-			}
-			
-			else {
-				
-				spells[index] = spell3;
-				
-				Debug.Log("E Pressed: #" + index);
-				
-				index++;
-			}
+			Debug.Log("Out of Mana, Wait a Second" + mana.manaStored);
 		}
 
 		if (Input.GetKeyDown(KeyCode.R))
 		{
 			checkSpell();
-
-			for (int i = 0; i < spells.Length; i++)
+			
+			for (int i = 0; i < spells.Count; i++)
 			{
 				spells[i] = 0;
 			}
@@ -302,164 +325,302 @@ public class pcScript : MonoBehaviour {
 	{
 		if (index == fireball.Length)
 		{
-			for (int i = 0; i <fireball.Length; i++)
+			for (int i = 0; i < fireball.Length; i++)
 			{
 				if (fireball[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Fireball");
 				Debug.Log("Correct Spell");
+			}
+				
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
 		}
 
 		if (index == flares.Length)
 		{
-			for (int i = 0; i <flares.Length; i++)
+			for (int i = 0; i < flares.Length; i++)
 			{
 				if (flares[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Flares");
 				Debug.Log("Correct Spell");
+			}
+
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
 		}
 
 		if (index == sunbeam.Length)
 		{
-			for (int i = 0; i <sunbeam.Length; i++)
+			for (int i = 0; i < sunbeam.Length; i++)
 			{
 				if (sunbeam[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Sunbeam");
 				Debug.Log("Correct Spell");
+			}
+
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
 		}
 
 		if (index == piercingBlade.Length)
 		{
-			for (int i = 0; i <piercingBlade.Length; i++)
+			for (int i = 0; i < piercingBlade.Length; i++)
 			{
 				if (piercingBlade[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Piercing Blade");
 				Debug.Log("Correct Spell");
+			}
+			
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
 		}
 
 		if (index == guillotine.Length)
 		{
-			for (int i = 0; i <guillotine.Length; i++)
+			for (int i = 0; i < guillotine.Length; i++)
 			{
 				if (guillotine[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Guillotine");
 				Debug.Log("Correct Spell");
+			}
+			
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
 		}
 
 		if (index == whirlingBlade.Length)
 		{
-			for (int i = 0; i <whirlingBlade.Length; i++)
+			for (int i = 0; i < whirlingBlade.Length; i++)
 			{
 				if (whirlingBlade[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Whirling Blade");
 				Debug.Log("Correct Spell");
+			}
+			
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
 		}
 
 		if (index == drainCube.Length)
 		{
-			for (int i = 0; i <drainCube.Length; i++)
+			for (int i = 0; i < drainCube.Length; i++)
 			{
 				if (drainCube[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Drain Cube");
 				Debug.Log("Correct Spell");
+			}
+			
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
 		}
 
 		if (index == necroglassWall.Length)
 		{
-			for (int i = 0; i <necroglassWall.Length; i++)
+			for (int i = 0; i < necroglassWall.Length; i++)
 			{
 				if (necroglassWall[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Necroglass Wall");
 				Debug.Log("Correct Spell");
+			}
+			
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
 		}
 
 		if (index == darkGrasp.Length)
 		{
-			for (int i = 0; i <darkGrasp.Length; i++)
+			for (int i = 0; i < darkGrasp.Length; i++)
 			{
 				if (darkGrasp[i] == spells[i])
+				{
 					castSpell = true;
+				}
+
 				else
 				{
 					castSpell = false;
 					break;
 				}
-			}		
+			}
+
 			if (castSpell)
+			{
+				CastSpell("Dark Grasp");
 				Debug.Log("Correct Spell");
+			}
+			
 			else
+			{
 				Debug.Log("Incorrect Spell");
+			}
+		}
+	}
+
+	void CastSpell(string spellName)
+	{
+		if (spellName == "Fireball")
+		{
+			// Instantiate Fireball gameobject at designated location
+		}
+
+		if (spellName == "Flares")
+		{
+
+		}
+
+		if (spellName == "Sunbeam")
+		{
+			
+		}
+
+		if (spellName == "Piercing Blade")
+		{
+			
+		}
+
+		if (spellName == "Guillotine")
+		{
+			
+		}
+
+		if (spellName == "Whirling Blade")
+		{
+			
+		}
+
+		if (spellName == "Drain Cube")
+		{
+			
+		}
+
+		if (spellName == "Necroglass Wall")
+		{
+			
+		}
+
+		if (spellName == "Dark Grasp")
+		{
+			
 		}
 	}
 
