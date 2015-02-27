@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../Desktop/Sujan's Class/Assets/scripts/cameraChanger.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../DroneClass/Assets/scripts/droneScript.cs">
     <Files>
-      <File FileName="../Desktop/Sujan's Class/Assets/scripts/cameraChanger.cs" Line="161" Column="35" />
+      <File FileName="../DroneClass/Assets/scripts/droneScript.cs" Line="131" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

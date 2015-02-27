@@ -8,8 +8,7 @@ public class pcScript : MonoBehaviour {
 	public AudioClip deathSound;
 
 	// Variables to keep track of time
-	public float timer;
-	public float time;
+	private float jumpTimer;
 	public float jumpTime;
 
 	// Variables to store movement and jump speeds
@@ -19,20 +18,20 @@ public class pcScript : MonoBehaviour {
 	public float jumpDecrease;
 
 	// Variables to store ints for spell types
-	public int spell1 = 1;
-	public int spell2 = 2;
-	public int spell3 = 3;
+	private int spell1 = 1;
+	private int spell2 = 2;
+	private int spell3 = 3;
 
 	public int health;
 
 	// Array to hold the spell types
-	private List<int> spells = new List<int>();
+	public int[] spells;
 
 	// Castable Spells
 	private int[] fireball			= {1, 1, 1};
 	private int[] flares			= {1, 2, 1, 2};
-	private int[] sunbeam			= {1, 1, 3, 3, 1};
 	private int[] piercingBlade 	= {2, 1, 1, 3};
+	private int[] sunbeam			= {1, 1, 3, 3, 1};
 	private int[] guillotine		= {2, 2, 3, 1, 3};
 	private int[] whirlingBlade 	= {2, 3, 1, 2, 2};
 	private int[] drainCube			= {3, 3, 2, 1, 3};
@@ -40,8 +39,7 @@ public class pcScript : MonoBehaviour {
 	private int[] darkGrasp			= {3, 1, 2, 3, 2};
 
 	// Variable for length of array for spells
-	public int lengthOfArray = 6;
-	public int maxSpells = 5;
+	private int maxSpells = 5;
 
 	// Variable for the current index # the spells array is at
 	public int index = 0;
@@ -58,8 +56,6 @@ public class pcScript : MonoBehaviour {
 	// Variables to tell what state the player is currently in
 	public bool isJumping = false;
 	public bool isFalling = false;
-
-	public bool castSpell = false;
 
 	private soundScript sound;
 	private manaScript mana;
@@ -82,7 +78,7 @@ public class pcScript : MonoBehaviour {
 
 		deathSound = sound.deathSound;
 
-		//spells = new int[lengthOfArray];
+		spells = new int[maxSpells];
 	}
 	
 	// Update is called once per frame
@@ -99,115 +95,30 @@ public class pcScript : MonoBehaviour {
 		{
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				if (spells.Count > 5)
-				{
-					for (int i = 0; i < spells.Count; i++)
-					{
-						spells[i] = 0;
-					}
-					
-					index = 0;
-					
-					mana.manaStored--;
-					
-					spells[index] = spell1;
-					
-					Debug.Log("Full Q Pressed: #" + index);
-					
-					index++;
-				}
-				
-				else
-				{	
-					mana.manaStored--;
-
-					spells[index] = spell1;
-					Debug.Log("Q Pressed: #" + index + " " + spells[index]);
-					
-					index++;
-				}
+				clickedSpell(spell1);
 			}
 			
 			if (Input.GetKeyDown(KeyCode.W))
 			{
-				if (index > 4)
-				{
-					for (int i = 0; i < spells.Count; i++)
-					{
-						spells[i] = 0;
-					}
-					
-					index = 0;
-					
-					mana.manaStored--;
-					
-					spells[index] = spell2;
-					
-					Debug.Log("Full W Pressed: #" + index);
-					
-					index++;
-				}
-				
-				else
-				{	
-					mana.manaStored--;
-					
-					spells[index] = spell2;
-					
-					Debug.Log("W Pressed: #" + index);
-					
-					index++;
-				}
+				clickedSpell(spell2);
 			}
 			
 			if (Input.GetKeyDown(KeyCode.E))
 			{
-				if (index > 4)
-				{
-					for (int i = 0; i < spells.Count; i++)
-					{
-						spells[i] = 0;
-					}
-					
-					index = 0;
-					
-					mana.manaStored--;
-					
-					spells[index] = spell3;
-					
-					Debug.Log("Full E Pressed: #" + index);
-					
-					index++;
-				}
-				
-				else 
-				{	
-					mana.manaStored--;
-					
-					spells[index] = spell3;
-					
-					Debug.Log("E Pressed: #" + index);
-					
-					index++;
-				}
+				clickedSpell(spell3);
 			}
 		}
 
 		else if (mana.manaStored <= 0)
 		{
-			Debug.Log("Out of Mana, Wait a Second" + mana.manaStored);
+			Debug.Log("Out of Mana, Wait a Second - " + mana.manaStored);
 		}
 
 		if (Input.GetKeyDown(KeyCode.R))
 		{
 			checkSpell();
 			
-			for (int i = 0; i < spells.Count; i++)
-			{
-				spells[i] = 0;
-			}
-			
-			index = 0;
+			resetSpells();
 		}
 
 		// If the left arrow key is currently down
@@ -249,8 +160,8 @@ public class pcScript : MonoBehaviour {
 		// so that this can loop correctly. We need it to loop in order to tell time and move the player
 		if (isJumping)
 		{
-			// Increase the timer by 1 per second
-			timer += Time.deltaTime;
+			// Increase the jumpTimer by 1 per second
+			jumpTimer += Time.deltaTime;
 
 			// Set the player's move speed to 1/4 of the usual speed because the player is in the air
 			moveSpeed = constMoveSpeed / jumpDecrease;
@@ -264,14 +175,14 @@ public class pcScript : MonoBehaviour {
 			// Set the object's position to the temporary variable in order to get the object to move
 			this.transform.position = positionJ;
 
-			// If the timer reaches the time we set for the player to be able to jump for
-			if (timer >= jumpTime)
+			// If the jumpTimer reaches the time we set for the player to be able to jump for
+			if (jumpTimer >= jumpTime)
 			{
 				// Set the player to falling
 				isFalling = true;
 
-				// Reset the timer so that we can use the timer variable again next time they jump
-				timer = 0;
+				// Reset the jumpTimer so that we can use the jumpTimer variable again next time they jump
+				jumpTimer = 0;
 
 				// Make sure to set the player to not jumping anymore, this must be done in order
 				// to get out of this loop. This whole loop is what made the player move up. We
@@ -321,262 +232,223 @@ public class pcScript : MonoBehaviour {
 		}
 	}
 
+	void clickedSpell (int clicked)
+	{
+		if (index > 4)
+		{
+			resetSpells();
+			
+			mana.manaStored--;
+			
+			spells[index] = clicked;
+			
+			Debug.Log("Full Button Pressed: #" + (index + 1) + " " + spells[index]);
+			
+			index++;
+		}
+		
+		else
+		{
+			mana.manaStored--;
+			
+			spells[index] = clicked;
+			Debug.Log("Button Pressed: #" + (index + 1) + " " + spells[index]);
+			
+			index++;
+		}
+	}
+
+	void resetSpells ()
+	{
+		for (int i = 0; i < spells.Length; i++)
+		{
+			spells[i] = 0;
+		}
+		
+		index = 0;
+	}
+
 	void checkSpell ()
 	{
-		if (index == fireball.Length)
+		if (index <= 0)
+		{
+			Debug.Log("Use mana to cast spells. : " + index + " mana used");
+		}
+
+		else if (index == 1 || index == 2)
+		{
+			Debug.Log("Not enough mana was used. : " + index + " mana used");
+		}
+
+		else if (index == 3)
 		{
 			for (int i = 0; i < fireball.Length; i++)
 			{
-				if (fireball[i] == spells[i])
+				if (spells[i] == fireball[i])
 				{
-					castSpell = true;
+					if (i == fireball.Length - 1)
+					{
+						Debug.Log("Cast Fireball");
+						CastSpell("Fireball");
+					}
 				}
-
+				
 				else
 				{
-					castSpell = false;
 					break;
 				}
 			}
-
-			if (castSpell)
-			{
-				CastSpell("Fireball");
-				Debug.Log("Correct Spell");
-			}
-				
-			else
-			{
-				Debug.Log("Incorrect Spell");
-			}
 		}
 
-		if (index == flares.Length)
+		else if (index == 4)
 		{
 			for (int i = 0; i < flares.Length; i++)
 			{
 				if (flares[i] == spells[i])
 				{
-					castSpell = true;
+					if (i == flares.Length - 1)
+					{
+						CastSpell("Flares");
+						Debug.Log("Cast Flares");
+					}
 				}
-
+				
 				else
 				{
-					castSpell = false;
 					break;
 				}
 			}
 
-			if (castSpell)
+			for (int i = 0; i < piercingBlade.Length; i++)
 			{
-				CastSpell("Flares");
-				Debug.Log("Correct Spell");
-			}
-
-			else
-			{
-				Debug.Log("Incorrect Spell");
+				if (piercingBlade[i] == spells[i])
+				{
+					if (i == piercingBlade.Length - 1)
+					{
+						CastSpell("Piercing Blade");
+						Debug.Log("Cast Piercing Blade");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
 			}
 		}
 
-		if (index == sunbeam.Length)
+		else if (index == 5)
 		{
 			for (int i = 0; i < sunbeam.Length; i++)
 			{
 				if (sunbeam[i] == spells[i])
 				{
-					castSpell = true;
+					if (i == sunbeam.Length - 1)
+					{
+						CastSpell("Sunbeam");
+						Debug.Log("Cast Sunbeam");
+					}
 				}
-
+				
 				else
 				{
-					castSpell = false;
 					break;
 				}
 			}
 
-			if (castSpell)
-			{
-				CastSpell("Sunbeam");
-				Debug.Log("Correct Spell");
-			}
-
-			else
-			{
-				Debug.Log("Incorrect Spell");
-			}
-		}
-
-		if (index == piercingBlade.Length)
-		{
-			for (int i = 0; i < piercingBlade.Length; i++)
-			{
-				if (piercingBlade[i] == spells[i])
-				{
-					castSpell = true;
-				}
-
-				else
-				{
-					castSpell = false;
-					break;
-				}
-			}
-
-			if (castSpell)
-			{
-				CastSpell("Piercing Blade");
-				Debug.Log("Correct Spell");
-			}
-			
-			else
-			{
-				Debug.Log("Incorrect Spell");
-			}
-		}
-
-		if (index == guillotine.Length)
-		{
 			for (int i = 0; i < guillotine.Length; i++)
 			{
 				if (guillotine[i] == spells[i])
 				{
-					castSpell = true;
+					if (i == guillotine.Length - 1)
+					{
+						CastSpell("Guillotine");
+						Debug.Log("Cast Guillotine");
+					}
 				}
-
+				
 				else
 				{
-					castSpell = false;
 					break;
 				}
 			}
 
-			if (castSpell)
-			{
-				CastSpell("Guillotine");
-				Debug.Log("Correct Spell");
-			}
-			
-			else
-			{
-				Debug.Log("Incorrect Spell");
-			}
-		}
-
-		if (index == whirlingBlade.Length)
-		{
 			for (int i = 0; i < whirlingBlade.Length; i++)
 			{
 				if (whirlingBlade[i] == spells[i])
 				{
-					castSpell = true;
+					if (i == whirlingBlade.Length - 1)
+					{
+						CastSpell("Whirling Blade");
+						Debug.Log("Cast Whirling Blade");
+					}
 				}
-
+				
 				else
 				{
-					castSpell = false;
 					break;
 				}
 			}
 
-			if (castSpell)
-			{
-				CastSpell("Whirling Blade");
-				Debug.Log("Correct Spell");
-			}
-			
-			else
-			{
-				Debug.Log("Incorrect Spell");
-			}
-		}
-
-		if (index == drainCube.Length)
-		{
 			for (int i = 0; i < drainCube.Length; i++)
 			{
 				if (drainCube[i] == spells[i])
 				{
-					castSpell = true;
+					if (i == drainCube.Length - 1)
+					{
+						CastSpell("Drain Cube");
+						Debug.Log("Cast Drain Cube");
+					}
 				}
-
+				
 				else
 				{
-					castSpell = false;
 					break;
 				}
 			}
 
-			if (castSpell)
-			{
-				CastSpell("Drain Cube");
-				Debug.Log("Correct Spell");
-			}
-			
-			else
-			{
-				Debug.Log("Incorrect Spell");
-			}
-		}
-
-		if (index == necroglassWall.Length)
-		{
 			for (int i = 0; i < necroglassWall.Length; i++)
 			{
 				if (necroglassWall[i] == spells[i])
 				{
-					castSpell = true;
+					if (i == necroglassWall.Length - 1)
+					{
+						CastSpell("Necroglass Wall");
+						Debug.Log("Cast Necroglass Wall");
+					}
 				}
-
+				
 				else
 				{
-					castSpell = false;
 					break;
 				}
 			}
 
-			if (castSpell)
-			{
-				CastSpell("Necroglass Wall");
-				Debug.Log("Correct Spell");
-			}
-			
-			else
-			{
-				Debug.Log("Incorrect Spell");
-			}
-		}
-
-		if (index == darkGrasp.Length)
-		{
 			for (int i = 0; i < darkGrasp.Length; i++)
 			{
 				if (darkGrasp[i] == spells[i])
 				{
-					castSpell = true;
+					if (i == darkGrasp.Length - 1)
+					{
+						CastSpell("Dark Grasp");
+						Debug.Log("Cast Dark Grasp");
+					}
 				}
-
+				
 				else
 				{
-					castSpell = false;
 					break;
 				}
 			}
+		}
 
-			if (castSpell)
-			{
-				CastSpell("Dark Grasp");
-				Debug.Log("Correct Spell");
-			}
-			
-			else
-			{
-				Debug.Log("Incorrect Spell");
-			}
+		else if (index > 5)
+		{
+			Debug.Log("Error casting spell. Index above spell limit. : " + index);
 		}
 	}
 
-	void CastSpell(string spellName)
+	void CastSpell (string spellName)
 	{
 		if (spellName == "Fireball")
 		{

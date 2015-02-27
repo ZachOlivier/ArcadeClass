@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class cameraFollow : MonoBehaviour {
+public class cameraScript : MonoBehaviour {
+
+	public GUISkin mySkin;
+	
+	public int totalScore;
 
 	public Transform target;
 	public float distance = 1f;
