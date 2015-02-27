@@ -1,8 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../DroneClass/Assets/scripts/droneScript.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/pcScript.cs">
     <Files>
-      <File FileName="../DroneClass/Assets/scripts/droneScript.cs" Line="131" Column="4" />
+      <File FileName="Assets/scripts/pcScript.cs" Line="22" Column="25" />
+      <File FileName="Assets/scripts/enemyScript.cs" Line="20" Column="25" />
+      <File FileName="Assets/scripts/spellScript.cs" Line="13" Column="27" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
