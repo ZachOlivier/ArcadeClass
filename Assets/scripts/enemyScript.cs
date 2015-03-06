@@ -3,9 +3,9 @@ using System.Collections;
 
 public class enemyScript : MonoBehaviour {
 
-	private enum STATE {IDLE, MOVING, ATTACKING, DEATH};
+	public enum STATE {IDLE, MOVING, ATTACKING, DEATH};
 
-	private STATE currentSTATE;
+	public STATE currentSTATE;
 	
 	public AudioClip gameOver;
 	
@@ -24,6 +24,8 @@ public class enemyScript : MonoBehaviour {
 	public int damage;
 	public int walkerDamage;
 	public int hopperDamage;
+	public int gliderDamage;
+	public int wormDamage;
 	public int shielderDamage;
 	public int gasBladderDamage;
 
@@ -31,6 +33,8 @@ public class enemyScript : MonoBehaviour {
 	public int walkerMoveSpeed;
 	public int shielderMoveSpeed;
 	public int hopperMoveSpeed;
+	public int gliderMoveSpeed;
+	public int wormMoveSpeed;
 	public int gasBladderMoveSpeed;
 
 	public float gasBladderTimer;
@@ -42,6 +46,7 @@ public class enemyScript : MonoBehaviour {
 	public float timer;
 	public float nextJumpTimer;
 	public float jumpTime;
+	public float jumpBleedOff;
 	
 	public float jumpSpeed;
 	
@@ -129,66 +134,92 @@ public class enemyScript : MonoBehaviour {
 			if (currentSTATE == STATE.MOVING)
 			{
 				nextJumpTimer += Time.deltaTime;
-				
-				if (nextJumpTimer >= 2 && !jumping && !falling) {
-					// Set the player to jumping, we can not put the code below in here because this isnt a loop
+				Vector2 position = this.transform.position;
+				if (nextJumpTimer >= timer)
+				{
+					position.x -= hopperMoveSpeed * Time.deltaTime;
+
+					position.y += (jumpSpeed + jumpBleedOff) * Time.deltaTime;
+					
+					this.transform.position = position;
+
+					jumpBleedOff -= .05f;
+
 					jumping = true;
+				}
+				if (jumping && position.y <= groundY)
+				{
+					jumping = false;
+					jumpBleedOff = 1;
 					nextJumpTimer = 0;
-				}
-				
-				if (jumping) {
-
-					// Increase the timer by 1 per second
-					timer += Time.deltaTime;
-
-					Vector2 position = this.transform.position;
-					
-					position.x -= hopperMoveSpeed * Time.deltaTime;
-
-					// This time we change the Y value, adding the jump speed per second to move the player up
-					position.y += jumpSpeed * Time.deltaTime;
-
-					// Set the object's position to the temporary variable in order to get the object to move
-					this.transform.position = position;
-					
-					// If the timer reaches the time we set for the player to be able to jump for
-					if (timer >= jumpTime) {
-						// Set the player to falling
-						falling = true;
-						
-						// Reset the timer so that we can use the timer variable again next time they jump
-						timer = 0;
-						jumping = false;
-					}
-				}
-				
-				if (this.transform.position.y <= groundY && !jumping && falling) {
-					// Set the temporary position variable
-					Vector2 position = this.transform.position;
-					
-					// Set the player's position to the temp variable. Notice the temp variable is set to
-					// the player's current position. This means I am setting the player's position to its
-					// current position. Effectively stopping the player's falling movement.
-					this.transform.position = position;
-					
-					
-					// Set the player to no longer falling, since the object has hit the ground. This takes us
-					// out of the loop as well. Notice that since this takes us out of the loop, this is last!
-					falling = false;
-				}
-				
-				else if (this.transform.position.y > groundY && !jumping) {
-					Vector2 position = this.transform.position;
-					
-					position.x -= hopperMoveSpeed * Time.deltaTime;
-
-					// Decrease the Y value by gravity's speed per second, this will move the player down in game
-					position.y -= gravity * Time.deltaTime;
-					
-					this.transform.position = position;
+					this.transform.position = new Vector2(position.x, 0);
 				}
 			}
 
+			else if (currentSTATE == STATE.ATTACKING)
+			{
+				
+			}
+			
+			else if (currentSTATE == STATE.DEATH)
+			{
+				
+			}
+		}
+
+		else if (this.gameObject.name == "Glider")
+		{
+			if (currentSTATE == STATE.MOVING)
+			{
+				Vector2 position = this.transform.position;
+				
+				position.x -= gliderMoveSpeed * Time.deltaTime;
+				
+				this.transform.position = position;
+			}
+			
+			else if (currentSTATE == STATE.ATTACKING)
+			{
+				
+			}
+			
+			else if (currentSTATE == STATE.DEATH)
+			{
+				
+			}
+		}
+
+		else if (this.gameObject.name == "DarkWorm")
+		{
+			if (currentSTATE == STATE.MOVING)
+			{
+				if (health >= 5)
+				{
+					Vector2 position = this.transform.position;
+					
+					position.x -= wormMoveSpeed * Time.deltaTime;
+					
+					this.transform.position = position;
+				}
+				else if (health >= 3)
+				{
+					Vector2 position = this.transform.position;
+					
+					position.x -= (wormMoveSpeed + 1) * Time.deltaTime;
+					
+					this.transform.position = position;
+				}
+				else if (health >= 1)
+				{
+					Vector2 position = this.transform.position;
+					
+					position.x -= (wormMoveSpeed = 3) * Time.deltaTime;
+					
+					this.transform.position = position;
+				}
+
+			}
+			
 			else if (currentSTATE == STATE.ATTACKING)
 			{
 				
