@@ -30,13 +30,22 @@ public class pcScript : MonoBehaviour {
 	// Castable Spells
 	private int[] fireball			= {1, 1, 1};
 	private int[] flares			= {1, 2, 1, 2};
+	private int[] gravitySwell      = {3, 2, 1, 3};
+	private int[] mindBarrier       = {2, 3, 3, 2};
 	private int[] piercingBlade 	= {2, 1, 1, 3};
-	private int[] sunbeam			= {1, 1, 3, 3, 1};
-	private int[] guillotine		= {2, 2, 3, 1, 3};
-	private int[] whirlingBlade 	= {2, 3, 1, 2, 2};
-	private int[] drainCube			= {3, 3, 2, 1, 3};
-	private int[] necroglassWall	= {3, 2, 2, 3, 3};
+	private int[] accelerationSkewer= {1, 3, 2, 1, 1};
+	private int[] arcbolt           = {1, 2, 3, 2, 3};
 	private int[] darkGrasp			= {3, 1, 2, 3, 2};
+	private int[] drainCube			= {3, 3, 2, 1, 3};
+	private int[] essenceZone       = {3, 3, 2, 2, 3};
+	private int[] guillotine		= {2, 2, 3, 1, 3};
+	private int[] mentalBreak       = {2, 1, 2, 1, 3};
+	private int[] necroglassWall	= {3, 2, 2, 3, 3};
+	private int[] overload          = {2, 2, 2, 2, 2};
+	private int[] recall 			= {3, 2, 3, 3, 1};
+	private int[] sunbeam			= {1, 1, 3, 3, 1};
+	private int[] unleash           = {1, 3, 3, 1, 2};
+	private int[] whirlingBlade 	= {2, 3, 1, 2, 2};
 
 	// Variable for length of array for spells
 	private int maxSpells = 5;
@@ -57,8 +66,22 @@ public class pcScript : MonoBehaviour {
 	public bool isJumping = false;
 	public bool isFalling = false;
 
+	public Transform recallPoint;
+	public Color playerColor;
+	public float changeSpeed;
+	private float alpha = 1.0f;
+	private bool recalled;
+	private float recallTimer;
+	private float recallCDTimer;
+	public float recallTimeFlicker;
+	public float recallPushBackRadius;
+	public float recallCD;
+
+	private GameObject[] enemyArray;
+
 	private soundScript sound;
 	private manaScript mana;
+	private enemyScript enemy;
 
 	void Awake ()
 	{
@@ -76,6 +99,8 @@ public class pcScript : MonoBehaviour {
 		// of the script. Note that this function overrides the value that is set outside of the script in the
 		// editor's inspector tab. This means make sure that this value is set right here, or it can mess it up
 
+		playerColor = this.renderer.material.color;
+
 		deathSound = sound.deathSound;
 
 		spells = new int[maxSpells];
@@ -84,12 +109,49 @@ public class pcScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+		// START PLAYER STATUS
+
+		if (recalled)
+		{
+			if (recallTimer <= recallTimeFlicker)
+			{
+				alpha -= changeSpeed * Time.deltaTime;
+				
+				playerColor.a = alpha;
+				
+				this.renderer.material.color = playerColor;
+			}
+
+			else if (recallTimer > recallTimeFlicker)
+			{
+				alpha += changeSpeed * Time.deltaTime;
+				
+				playerColor.a = alpha;
+				
+				this.renderer.material.color = playerColor;
+			}
+
+			else if (recallTimer >= recallTimeFlicker * 2)
+			{
+				recallTimer = 0;
+
+				recalled = false;
+			}
+		}
+
+		if (recallCDTimer >= 0)
+		{
+			recallCDTimer -= Time.deltaTime;
+		}
+
 		if (health <= 0)
 		{
 			sound.audio.PlayOneShot(deathSound);
 
 			health = 3;
 		}
+
+		// START SPELL SYSTEM
 
 		if (mana.manaStored > 0)
 		{
@@ -319,6 +381,40 @@ public class pcScript : MonoBehaviour {
 				}
 			}
 
+			for (int i = 0; i < gravitySwell.Length; i++)
+			{
+				if (gravitySwell[i] == spells[i])
+				{
+					if (i == gravitySwell.Length - 1)
+					{
+						CastSpell("Gravity Swell");
+						Debug.Log("Cast Gravity Swell");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
+			for (int i = 0; i < mindBarrier.Length; i++)
+			{
+				if (mindBarrier[i] == spells[i])
+				{
+					if (i == mindBarrier.Length - 1)
+					{
+						CastSpell("Mind Barrier");
+						Debug.Log("Cast Mind Barrier");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
 			for (int i = 0; i < piercingBlade.Length; i++)
 			{
 				if (piercingBlade[i] == spells[i])
@@ -339,14 +435,14 @@ public class pcScript : MonoBehaviour {
 
 		else if (index == 5)
 		{
-			for (int i = 0; i < sunbeam.Length; i++)
+			for (int i = 0; i < accelerationSkewer.Length; i++)
 			{
-				if (sunbeam[i] == spells[i])
+				if (accelerationSkewer[i] == spells[i])
 				{
-					if (i == sunbeam.Length - 1)
+					if (i == accelerationSkewer.Length - 1)
 					{
-						CastSpell("Sunbeam");
-						Debug.Log("Cast Sunbeam");
+						CastSpell("Acceleration Skewer");
+						Debug.Log("Cast Acceleration Skewer");
 					}
 				}
 				
@@ -356,14 +452,14 @@ public class pcScript : MonoBehaviour {
 				}
 			}
 
-			for (int i = 0; i < guillotine.Length; i++)
+			for (int i = 0; i < arcbolt.Length; i++)
 			{
-				if (guillotine[i] == spells[i])
+				if (arcbolt[i] == spells[i])
 				{
-					if (i == guillotine.Length - 1)
+					if (i == arcbolt.Length - 1)
 					{
-						CastSpell("Guillotine");
-						Debug.Log("Cast Guillotine");
+						CastSpell("Arcbolt");
+						Debug.Log("Cast Arcbolt");
 					}
 				}
 				
@@ -373,14 +469,14 @@ public class pcScript : MonoBehaviour {
 				}
 			}
 
-			for (int i = 0; i < whirlingBlade.Length; i++)
+			for (int i = 0; i < darkGrasp.Length; i++)
 			{
-				if (whirlingBlade[i] == spells[i])
+				if (darkGrasp[i] == spells[i])
 				{
-					if (i == whirlingBlade.Length - 1)
+					if (i == darkGrasp.Length - 1)
 					{
-						CastSpell("Whirling Blade");
-						Debug.Log("Cast Whirling Blade");
+						CastSpell("Dark Grasp");
+						Debug.Log("Cast Dark Grasp");
 					}
 				}
 				
@@ -407,6 +503,57 @@ public class pcScript : MonoBehaviour {
 				}
 			}
 
+			for (int i = 0; i < essenceZone.Length; i++)
+			{
+				if (essenceZone[i] == spells[i])
+				{
+					if (i == essenceZone.Length - 1)
+					{
+						CastSpell("Essence Zone");
+						Debug.Log("Cast Essence Zone");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
+			for (int i = 0; i < guillotine.Length; i++)
+			{
+				if (guillotine[i] == spells[i])
+				{
+					if (i == guillotine.Length - 1)
+					{
+						CastSpell("Guillotine");
+						Debug.Log("Cast Guillotine");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
+			for (int i = 0; i < mentalBreak.Length; i++)
+			{
+				if (mentalBreak[i] == spells[i])
+				{
+					if (i == mentalBreak.Length - 1)
+					{
+						CastSpell("Mental Break");
+						Debug.Log("Cast Mental Break");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
 			for (int i = 0; i < necroglassWall.Length; i++)
 			{
 				if (necroglassWall[i] == spells[i])
@@ -424,14 +571,82 @@ public class pcScript : MonoBehaviour {
 				}
 			}
 
-			for (int i = 0; i < darkGrasp.Length; i++)
+			for (int i = 0; i < overload.Length; i++)
 			{
-				if (darkGrasp[i] == spells[i])
+				if (overload[i] == spells[i])
 				{
-					if (i == darkGrasp.Length - 1)
+					if (i == overload.Length - 1)
 					{
-						CastSpell("Dark Grasp");
-						Debug.Log("Cast Dark Grasp");
+						CastSpell("Overload");
+						Debug.Log("Cast Overload");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
+			for (int i = 0; i < recall.Length; i++)
+			{
+				if (recall[i] == spells[i])
+				{
+					if (i == recall.Length - 1)
+					{
+						CastSpell("Recall");
+						Debug.Log("Cast Recall");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
+			for (int i = 0; i < sunbeam.Length; i++)
+			{
+				if (sunbeam[i] == spells[i])
+				{
+					if (i == sunbeam.Length - 1)
+					{
+						CastSpell("Sunbeam");
+						Debug.Log("Cast Sunbeam");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
+			for (int i = 0; i < unleash.Length; i++)
+			{
+				if (unleash[i] == spells[i])
+				{
+					if (i == unleash.Length - 1)
+					{
+						CastSpell("Unleash");
+						Debug.Log("Cast Unleash");
+					}
+				}
+				
+				else
+				{
+					break;
+				}
+			}
+
+			for (int i = 0; i < whirlingBlade.Length; i++)
+			{
+				if (whirlingBlade[i] == spells[i])
+				{
+					if (i == whirlingBlade.Length - 1)
+					{
+						CastSpell("Whirling Blade");
+						Debug.Log("Cast Whirling Blade");
 					}
 				}
 				
@@ -450,47 +665,115 @@ public class pcScript : MonoBehaviour {
 
 	void CastSpell (string spellName)
 	{
+		if (spellName == "Acceleration Skewer")
+		{
+			
+		}
+		
+		if (spellName == "Arcbolt")
+		{
+			
+		}
+
+		if (spellName == "Dark Grasp")
+		{
+			
+		}
+		
+		if (spellName == "Drain Cube")
+		{
+			
+		}
+		
+		if (spellName == "Essence Zone")
+		{
+			
+		}
+
 		if (spellName == "Fireball")
 		{
-			// Instantiate Fireball gameobject at designated location
+
 		}
 
 		if (spellName == "Flares")
 		{
 
 		}
-
-		if (spellName == "Sunbeam")
+		
+		if (spellName == "Gravity Swell")
 		{
 			
 		}
-
+		
+		if (spellName == "Guillotine")
+		{
+			
+		}
+		
+		if (spellName == "Mental Break")
+		{
+			
+		}
+		
+		if (spellName == "Mind Barrier")
+		{
+			
+		}
+		
+		if (spellName == "Necroglass Wall")
+		{
+			
+		}
+		
+		if (spellName == "Overload")
+		{
+			
+		}
+		
 		if (spellName == "Piercing Blade")
 		{
 			
 		}
 
-		if (spellName == "Guillotine")
+		if (spellName == "Recall")
+		{
+			if (recallCDTimer <= 0)
+			{
+				this.transform.position = recallPoint.transform.position;
+				
+				enemyArray = GameObject.FindGameObjectsWithTag("Enemy");
+				
+				for (int i = 0; i < enemyArray.Length; i++)
+				{
+					if (Vector2.Distance(this.transform.position, enemyArray[i].transform.position) <= recallPushBackRadius)
+					{
+						enemy = enemyArray[i].GetComponent<enemyScript>();
+						
+						enemy.PushBack();
+					}
+				}
+				
+				recallCDTimer = recallCD;
+				recalled = true;
+			}
+
+			else
+			{
+				Debug.Log ("Cant Cast Recall Again For : " + recallCDTimer);
+			}
+		}
+		
+		if (spellName == "Sunbeam")
 		{
 			
 		}
-
+		
+		if (spellName == "Unleash")
+		{
+			
+		}
+		
 		if (spellName == "Whirling Blade")
-		{
-			
-		}
-
-		if (spellName == "Drain Cube")
-		{
-			
-		}
-
-		if (spellName == "Necroglass Wall")
-		{
-			
-		}
-
-		if (spellName == "Dark Grasp")
 		{
 			
 		}
